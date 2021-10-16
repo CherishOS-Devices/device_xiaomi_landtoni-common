@@ -28,6 +28,7 @@
 #include <unistd.h>
 
 bool is_goodix = false;
+bool goodix_disable_notify_cancel_hack = false;
 
 static constexpr char kGoodixFpDev[] = "/dev/goodix_fp";
 
@@ -41,6 +42,10 @@ int main() {
     if (android::base::GetProperty("persist.sys.fp.vendor","") == "goodix") {
         is_goodix = true;
         ALOGI("is_goodix has set to true! Workarounds for goodix are getting enabled.");
+    }
+    if (android::base::GetProperty("vendor.fingerprint.goodix.disable_notify_cancel_hack","") == "1") {
+        goodix_disable_notify_cancel_hack = true;
+        ALOGI("goodix_disable_notify_cancel_hack has set to true! Disable notify client on cancel hack for goodix.");
     }
 
     android::sp<IBiometricsFingerprint> bio = BiometricsFingerprint::getInstance();
